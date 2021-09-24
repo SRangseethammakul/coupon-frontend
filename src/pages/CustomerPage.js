@@ -37,7 +37,7 @@ const CustomerPage = () => {
   });
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
+      setLoading(true); 
       const pathURL = "https://connect-meeting-backend.herokuapp.com/customer";
       const resp = await axios.post(pathURL, {
         name: data.name,
