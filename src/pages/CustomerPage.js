@@ -37,7 +37,7 @@ const CustomerPage = () => {
   });
   const onSubmit = async (data) => {
     try {
-      const pathURL = "http://localhost:4000/customer";
+      const pathURL = "https://connect-meeting-backend.herokuapp.com/customer";
       const resp = await axios.post(pathURL, {
         name: data.name,
         phonenumber: data.phonenumber,
@@ -51,8 +51,8 @@ const CustomerPage = () => {
         timer: 3000,
       });
       history.replace("/login");
-    } catch (error) {
-      addToast(error.response.data.error.message, {
+    } catch (err) {
+      addToast(err.response.data.error.message, {
         appearance: "error",
         autoDismiss: true,
         autoDismissTimeout: 3000,
@@ -67,8 +67,8 @@ const CustomerPage = () => {
       }else{
         setError('กรุณาลองกดลิงค์ใหม่ทางไลน์อีกครั้ง');
       }
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }

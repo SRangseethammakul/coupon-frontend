@@ -17,12 +17,9 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
-// const token = JSON.parse(localStorage.getItem("token"));
-// const URL_END_POINT = process.env.REACT_APP_API_ENDPOINT;
+import {BASE_URL} from "../config/index";
 const api = axios.create({
-  baseURL: `https://connectmeeting.herokuapp.com/apis/connect`,
-  // headers: {'Authorization': 'Bearer '+ token.access_token}
-  // baseURL: `https://50fa00a52754.ngrok.io/apis/connect`,
+  baseURL: `${BASE_URL}/room`,
 });
 const RoomPage = () => {
   const [loading, setLoading] = React.useState(false);
@@ -31,10 +28,10 @@ const RoomPage = () => {
   const cancelToken = React.useRef(null);
   const handleRowUpdate = (newData, oldData, resolve) => {
     api
-      .put("/room", {
-        _id: newData._id,
-        status: newData.status,
+      .put(`/${newData._id}`, {
+        isUsed: newData.isUsed,
         name: newData.name,
+        status : true
       })
       .then((res) => {
         const dataUpdate = [...rooms];
@@ -43,19 +40,19 @@ const RoomPage = () => {
         setRoom([...dataUpdate]);
         resolve();
       })
-      .catch((error) => {
-        setError(error.message);
-        if (error.response) {
-          console.log(error.response.data);
-          setError(error.response.data.message);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-          setError(error.request);
+      .catch((err) => {
+        setError(err.message);
+        if (err.response) {
+          console.log(err.response.data);
+          setError(err.response.data.message);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else if (err.request) {
+          console.log(err.request);
+          setError(err.request);
         } else {
-          setError(error.message);
-          console.log("Error", error.message);
+          setError(err.message);
+          console.log("Error", err.message);
         }
         resolve();
       });
@@ -64,31 +61,28 @@ const RoomPage = () => {
   const handleRowAdd = (newData, resolve) => {
     console.log(newData);
     api
-      .post("/room", newData)
+      .post("/", newData)
       .then((res) => {
         let dataToAdd = [...rooms];
         dataToAdd.push(newData);
         setRoom(dataToAdd);
         resolve();
       })
-      .catch((error) => {
-        setError(error.message);
+      .catch((err) => {
+        setError(err.message);
         resolve();
       });
   };
   const getData = async () => {
     try {
       setLoading(true);
-      const urlPath = `/room`;
+      const urlPath = `/`;
       const resp = await api.get(urlPath, {
-        // headers: {
-        //   Authorization: "Bearer " + token.access_token,
-        // },
         cancelToken: cancelToken.current.token,
       });
       setRoom(resp.data.data);
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -155,8 +149,8 @@ const RoomPage = () => {
                 { title: "id", field: "_id", editable: "never" ,hidden: true },
                 { title: "name", field: "name" },
                 {
-                  title: "status",
-                  field: "status",
+                  title: "isUsed",
+                  field: "isUsed",
                   lookup: { true: "ใช้งาน", false: "ปิดใช้งาน" },
                 },
               ]}
