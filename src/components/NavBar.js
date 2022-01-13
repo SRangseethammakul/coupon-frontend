@@ -7,7 +7,7 @@ const NavBar = () => {
     <>
       <Navbar bg="dark" expand="lg" variant="dark">
         <NavLink className="navbar-brand" to="/" exact>
-          <BsClock /> CHG
+          <BsClock /> RB
         </NavLink>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -16,14 +16,20 @@ const NavBar = () => {
               Home
             </NavLink>
             <NavLink
-              to="/schedule"
+              to="/coupon"
               className="nav-link"
               activeClassName="active"
             >
-              Schedule
+              Coupon
             </NavLink>
-            <NavLink to="/room" className="nav-link" activeClassName="active">
-              Room
+            <NavLink to="/datesetting" className="nav-link" activeClassName="active">
+              Date Setting
+            </NavLink>
+            <NavLink to="/transaction" className="nav-link" activeClassName="active">
+              Transaction
+            </NavLink>
+            <NavLink to="/chart" className="nav-link" activeClassName="active">
+              Chart
             </NavLink>
           </Nav>
         </Navbar.Collapse>

@@ -4,30 +4,44 @@ import PrivateRoute from "./guard/auth";
 import { Provider } from "react-redux";
 import NavBar from "./components/NavBar";
 import CalendarPage from "./pages/CalendarPage";
-import CreatePage from "./pages/CreatePage";
 import IndexPage from "./pages/IndexPage";
 import RoomPage from "./pages/RoomPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import configureStore from "./redux/configureStore";
-import CustomerPage from "./pages/CustomerPage";
-import SuccessPage from "./pages/SuccessPage";
+import Coupon from "./pages/Coupon";
+import DateSetting from "./pages/DateSetting";
+import Transaction from "./pages/Transaction";
+import ChartCount from "./pages/ChartCount";
 const { store } = configureStore();
 function App() {
   return (
     <>
       <Provider store={store}>
-        <ToastProvider>
+        <ToastProvider
+        autoDismiss
+        >
           <Router>
             <NavBar />
-            <Switch>
-              <PrivateRoute exact path="/">
+            <Route exact path="/coupon">
+              <Coupon />
+            </Route>
+            <Route exact path="/datesetting">
+              <DateSetting />
+            </Route>
+            <Route exact path="/transaction">
+              <Transaction />
+            </Route>
+            <Route exact path="/chart">
+              <ChartCount />
+            </Route>
+            <Route exact path="/">
                 <IndexPage />
-              </PrivateRoute>
+              </Route>
+            <Switch>
               <PrivateRoute path="/schedule">
                 <CalendarPage />
               </PrivateRoute>
-
               <Route
                 path="/room"
                 render={({ match: { url } }) => (
@@ -35,12 +49,6 @@ function App() {
                     <PrivateRoute path={`${url}/`} exact>
                       <RoomPage />
                     </PrivateRoute>
-                    <Route path={`${url}/create`} exact>
-                      <CreatePage />
-                    </Route>
-                    <Route path={`${url}/edit/:id`} exact>
-                      <CreatePage />
-                    </Route>
                   </>
                 )}
               ></Route>
@@ -49,12 +57,6 @@ function App() {
               </Route>
               <Route path="/login">
                 <LoginPage />
-              </Route>
-              <Route path="/customer">
-                <CustomerPage />
-              </Route>
-              <Route path="/success">
-                <SuccessPage />
               </Route>
             </Switch>
           </Router>
