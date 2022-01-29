@@ -44,7 +44,6 @@ const Coupon = () => {
         setMessage("กรุณาเปลี่ยนภาษา");
       }
       setEmployee("");
-
     } finally {
       setSend(false);
       barcodeAutoFocus();
