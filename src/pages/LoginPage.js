@@ -10,6 +10,10 @@ import { useHistory } from "react-router-dom";
 // import { UserStoreContext } from "../context/UserContext";
 import { useDispatch } from "react-redux";
 import { updateProfile } from "../redux/actions/authAction";
+import { BASE_URL } from "../config";
+const api = axios.create({
+  baseURL: `${BASE_URL}/users`,
+});
 const schema = yup.object().shape({
   username: yup.string().required("email not empty"),
   password: yup.string().required("password not empty"),
@@ -30,34 +34,33 @@ const LoginPage = () => {
   });
   const onSubmit = async (data) => {
     try {
-      const pathURL = "https://connectmeeting.herokuapp.com/users/login";
-      const resp = await axios.post(pathURL, {
-        username: data.username,
+      console.log(data.username);
+      const pathURL = "/login";
+      const resp = await api.post(pathURL, {
+        userName: data.username,
         password: data.password,
       });
+
       localStorage.setItem("token", JSON.stringify(resp.data));
       //get profile
-      const urlProfile = "https://connectmeeting.herokuapp.com/users/me";
-      const respProfile = await axios.get(urlProfile, {
+      const urlProfile = "/profile";
+      const respProfile = await api.get(urlProfile, {
         headers: {
           Authorization: "Bearer " + resp.data.access_token,
         },
       });
-      localStorage.setItem(
-        "profile",
-        JSON.stringify(respProfile.data.user)
-      );
+      localStorage.setItem("profile", JSON.stringify(respProfile.data.user));
 
       addToast("Welcome Back !!!", {
         appearance: "success",
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
-      const profileValue = JSON.parse(localStorage.getItem('profile'))
+      const profileValue = JSON.parse(localStorage.getItem("profile"));
       // userStore.updateProfile(profileValue); //context
       //call action
-      dispatch(updateProfile(profileValue))
-      history.replace('/');
+      dispatch(updateProfile(profileValue));
+      history.replace("/");
     } catch (error) {
       addToast(error.response.data.message, {
         appearance: "error",
@@ -79,7 +82,9 @@ const LoginPage = () => {
                   type="text"
                   name="username"
                   ref={register}
-                  className={`form-control ${errors.username ? "is-invalid" : ""}`}
+                  className={`form-control ${
+                    errors.username ? "is-invalid" : ""
+                  }`}
                 />
                 {errors.username && (
                   <Form.Control.Feedback type="invalid">
