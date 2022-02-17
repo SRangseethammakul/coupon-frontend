@@ -17,21 +17,82 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { BASE_URL } from "../config/index";
 const api = axios.create({
   baseURL: `${BASE_URL}/transaction_infomation`,
 });
 const Transaction = () => {
+  const MySwal = withReactContent(Swal);
   const [loading, setLoading] = React.useState(false);
   const [transactions, setTransaction] = React.useState([]);
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
+  const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
       setLoading(true);
       const urlPath = `/`;
       const resp = await api.get(urlPath, {
         cancelToken: cancelToken.current.token,
+        headers: {
+          Authorization: "Bearer " + profileValue.access_token,
+        },
+      });
+      setTransaction(resp.data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchData = async () => {
+    try {
+      setLoading(true);
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      if (!startDate && !endDate) {
+        MySwal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please insert start date and end date",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return 0;
+      }
+      if (!startDate) {
+        MySwal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please insert start date",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return 0;
+      }
+      if (!endDate) {
+        MySwal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please end date",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return 0;
+      }
+      const urlPath = `/searchByDate`;
+      const resp = await api.get(urlPath, {
+        params: {
+          startDate: startDate,
+          endDate: endDate,
+        },
+        cancelToken: cancelToken.current.token,
+        headers: {
+          Authorization: "Bearer " + profileValue.access_token,
+        },
       });
       setTransaction(resp.data.data);
     } catch (err) {
@@ -47,6 +108,7 @@ const Transaction = () => {
     return () => {
       cancelToken.current.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -93,6 +155,28 @@ const Transaction = () => {
   return (
     <>
       <Container className="mt-4">
+        <Row>
+          <Col>
+            <div>
+              <label htmlFor="birthday">Start Search:</label>
+              <input type="date" id="startDate" name="startDate" />
+            </div>
+          </Col>
+          <Col>
+            <div>
+              <label htmlFor="birthday">End Search:</label>
+              <input type="date" id="endDate" name="endDate" />
+            </div>
+          </Col>
+          <Col>
+            <button
+              className="btn btn-outline-success ml-2"
+              onClick={() => searchData()}
+            >
+              Search by date
+            </button>
+          </Col>
+        </Row>
         <Row>
           <Col>
             <MaterialTable
