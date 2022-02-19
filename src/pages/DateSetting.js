@@ -17,6 +17,7 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../config/index";
 const api = axios.create({
   baseURL: `${BASE_URL}/dateset`,
@@ -27,6 +28,7 @@ const DateSetting = () => {
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
   const profileValue = JSON.parse(localStorage.getItem("token"));
+  const history = useHistory();
   const handleRowUpdate = (newData, oldData, resolve) => {
     api
       .put(
@@ -76,6 +78,9 @@ const DateSetting = () => {
       });
       setRoom(resp.data.data);
     } catch (err) {
+      if (err.response.status === 401) {
+        history.replace("/login");
+      }
       setError(err.message);
     } finally {
       setLoading(false);

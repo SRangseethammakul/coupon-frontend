@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../config";
 const api = axios.create({
   baseURL: `${BASE_URL}/transaction_infomation`,
@@ -20,6 +21,7 @@ const ChartCount = () => {
   const [dataByBu, setDataByBu] = React.useState([]);
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
+  const history = useHistory();
   const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
@@ -34,6 +36,9 @@ const ChartCount = () => {
       setData(resp.data.data);
       setDataByBu(resp.data.transactionbybus);
     } catch (err) {
+      if (err.response.status === 401) {
+        history.replace("/login");
+      }
       setError(err.message);
     } finally {
       setLoading(false);

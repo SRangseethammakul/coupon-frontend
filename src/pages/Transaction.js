@@ -18,6 +18,7 @@ import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 import withReactContent from "sweetalert2-react-content";
 import { BASE_URL } from "../config/index";
 const api = axios.create({
@@ -29,6 +30,7 @@ const Transaction = () => {
   const [transactions, setTransaction] = React.useState([]);
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
+  const history = useHistory();
   const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
@@ -42,6 +44,10 @@ const Transaction = () => {
       });
       setTransaction(resp.data.data);
     } catch (err) {
+      console.log(err.response);
+      if (err.response.status === 401) {
+        history.replace("/login");
+      }
       setError(err.message);
     } finally {
       setLoading(false);
