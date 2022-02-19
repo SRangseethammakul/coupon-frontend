@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Redirect,useHistory } from "react-router-dom";
+import { Route, Redirect, useHistory } from "react-router-dom";
 import { updateProfile } from "../redux/actions/authAction";
 import { useDispatch } from "react-redux";
 export default function PrivateRoute({ children, ...rest }) {

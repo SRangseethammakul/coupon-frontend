@@ -26,15 +26,15 @@ function App() {
             <Route exact path="/coupon">
               <Coupon />
             </Route>
-            <Route exact path="/datesetting">
+            <PrivateRoute exact path="/datesetting">
               <DateSetting />
-            </Route>
-            <Route exact path="/transaction">
+            </PrivateRoute>
+            <PrivateRoute exact path="/transaction">
               <Transaction />
-            </Route>
-            <Route exact path="/chart">
+            </PrivateRoute>
+            <PrivateRoute exact path="/chart">
               <ChartCount />
-            </Route>
+            </PrivateRoute>
             <Route exact path="/">
                 <IndexPage />
               </Route>

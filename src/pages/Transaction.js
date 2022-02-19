@@ -44,7 +44,6 @@ const Transaction = () => {
       });
       setTransaction(resp.data.data);
     } catch (err) {
-      console.log(err.response);
       if (err.response.status === 401) {
         history.replace("/login");
       }
