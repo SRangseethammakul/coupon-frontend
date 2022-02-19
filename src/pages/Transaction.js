@@ -51,9 +51,9 @@ const Transaction = () => {
   const searchData = async () => {
     try {
       setLoading(true);
-      const startDate = document.getElementById("startDate").value;
-      const endDate = document.getElementById("endDate").value;
-      if (!startDate && !endDate) {
+      const startDate = document.getElementById("startDate");
+      const endDate = document.getElementById("endDate");
+      if (!startDate.value && !endDate.value) {
         MySwal.fire({
           icon: "error",
           title: "Oops...",
@@ -63,7 +63,7 @@ const Transaction = () => {
         });
         return 0;
       }
-      if (!startDate) {
+      if (!startDate.value) {
         MySwal.fire({
           icon: "error",
           title: "Oops...",
@@ -73,7 +73,7 @@ const Transaction = () => {
         });
         return 0;
       }
-      if (!endDate) {
+      if (!endDate.value) {
         MySwal.fire({
           icon: "error",
           title: "Oops...",
@@ -86,8 +86,8 @@ const Transaction = () => {
       const urlPath = `/searchByDate`;
       const resp = await api.get(urlPath, {
         params: {
-          startDate: startDate,
-          endDate: endDate,
+          startDate: startDate.value,
+          endDate: endDate.value,
         },
         cancelToken: cancelToken.current.token,
         headers: {
@@ -110,6 +110,7 @@ const Transaction = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -177,7 +178,7 @@ const Transaction = () => {
             </button>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-3">
           <Col>
             <MaterialTable
               icons={tableIcons}

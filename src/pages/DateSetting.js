@@ -26,11 +26,20 @@ const DateSetting = () => {
   const [rooms, setRoom] = React.useState([]);
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
+  const profileValue = JSON.parse(localStorage.getItem("token"));
   const handleRowUpdate = (newData, oldData, resolve) => {
     api
-      .put(`/${newData.id}`, {
-        limit: newData.limit,
-      })
+      .put(
+        `/${newData.id}`,
+        {
+          limit: newData.limit,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + profileValue.access_token,
+          },
+        }
+      )
       .then((res) => {
         const dataUpdate = [...rooms];
         const index = oldData.tableData.id;
@@ -61,6 +70,9 @@ const DateSetting = () => {
       const urlPath = `/`;
       const resp = await api.get(urlPath, {
         cancelToken: cancelToken.current.token,
+        headers: {
+          Authorization: "Bearer " + profileValue.access_token,
+        },
       });
       setRoom(resp.data.data);
     } catch (err) {
@@ -76,6 +88,7 @@ const DateSetting = () => {
     return () => {
       cancelToken.current.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

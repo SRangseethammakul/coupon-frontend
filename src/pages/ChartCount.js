@@ -20,12 +20,16 @@ const ChartCount = () => {
   const [dataByBu, setDataByBu] = React.useState([]);
   const [error, setError] = React.useState(null);
   const cancelToken = React.useRef(null);
+  const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
       setLoading(true);
       const urlPath = `/countperdate`;
       const resp = await api.get(urlPath, {
         cancelToken: cancelToken.current.token,
+        headers: {
+          Authorization: "Bearer " + profileValue.access_token,
+        },
       });
       setData(resp.data.data);
       setDataByBu(resp.data.transactionbybus);
@@ -41,6 +45,7 @@ const ChartCount = () => {
     return () => {
       cancelToken.current.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (loading === true) {
     return (
