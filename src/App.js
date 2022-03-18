@@ -26,35 +26,35 @@ function App() {
             <Route exact path="/coupon">
               <Coupon />
             </Route>
-            <PrivateRoute exact path="/datesetting">
+            <Route exact path="/datesetting">
               <DateSetting />
-            </PrivateRoute>
-            <PrivateRoute exact path="/transaction">
+            </Route>
+            <Route exact path="/transaction">
               <Transaction />
-            </PrivateRoute>
-            <PrivateRoute exact path="/chart">
+            </Route>
+            <Route exact path="/chart">
               <ChartCount />
-            </PrivateRoute>
+            </Route>
             <Route exact path="/">
                 <IndexPage />
               </Route>
             <Switch>
-              <PrivateRoute path="/schedule">
+              <Route path="/schedule">
                 <CalendarPage />
-              </PrivateRoute>
+              </Route>
               <Route
                 path="/room"
                 render={({ match: { url } }) => (
                   <>
-                    <PrivateRoute path={`${url}/`} exact>
+                    <Route path={`${url}/`} exact>
                       <RoomPage />
-                    </PrivateRoute>
+                    </Route>
                   </>
                 )}
               ></Route>
-              <Route path="/register">
+              <PrivateRoute path="/register">
                 <RegisterPage />
-              </Route>
+              </PrivateRoute>
               <Route path="/login">
                 <LoginPage />
               </Route>

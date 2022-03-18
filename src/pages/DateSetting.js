@@ -68,6 +68,9 @@ const DateSetting = () => {
   };
   const getData = async () => {
     try {
+      if (!profileValue) {
+        history.replace("/login");
+      }
       setLoading(true);
       const urlPath = `/`;
       const resp = await api.get(urlPath, {
@@ -78,7 +81,7 @@ const DateSetting = () => {
       });
       setRoom(resp.data.data);
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         history.replace("/login");
       }
       setError(err.message);

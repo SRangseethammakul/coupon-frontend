@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
+import { CSVLink } from "react-csv";
 import MaterialTable from "material-table";
 import axios from "axios";
 import AddBox from "@material-ui/icons/AddBox";
@@ -29,11 +30,16 @@ const Transaction = () => {
   const [loading, setLoading] = React.useState(false);
   const [transactions, setTransaction] = React.useState([]);
   const [error, setError] = React.useState(null);
+  const [startDateGlobal, setstartDate] = React.useState(null);
+  const [endDateGlobal, setEndDate] = React.useState(null);
   const cancelToken = React.useRef(null);
   const history = useHistory();
   const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
+      if (!profileValue) {
+        history.replace("/login");
+      }
       setLoading(true);
       const urlPath = `/`;
       const resp = await api.get(urlPath, {
@@ -44,7 +50,7 @@ const Transaction = () => {
       });
       setTransaction(resp.data.data);
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         history.replace("/login");
       }
       setError(err.message);
@@ -58,6 +64,8 @@ const Transaction = () => {
       setLoading(true);
       const startDate = document.getElementById("startDate");
       const endDate = document.getElementById("endDate");
+      setstartDate(startDate.value);
+      setEndDate(endDate.value);
       if (!startDate.value && !endDate.value) {
         MySwal.fire({
           icon: "error",
@@ -182,7 +190,22 @@ const Transaction = () => {
               Search by date
             </button>
           </Col>
+          <Col>
+            <CSVLink
+              filename={`Transaction${
+                endDateGlobal && startDateGlobal ? " " : ""
+              }${startDateGlobal ? startDateGlobal : ""} ${
+                endDateGlobal && startDateGlobal ? "- " : ""
+              }${endDateGlobal ? endDateGlobal : ""}.csv`}
+              className="btn btn-primary"
+              data={transactions}
+              target="_blank"
+            >
+              Download File
+            </CSVLink>
+          </Col>
         </Row>
+
         <Row className="mt-3">
           <Col>
             <MaterialTable
@@ -201,6 +224,11 @@ const Transaction = () => {
                 },
               ]}
               data={transactions}
+              localization={{
+                toolbar: {
+                  exportCSVName: "Export some excel format",
+                },
+              }}
               options={{
                 exportButton: {
                   csv: true,
@@ -208,6 +236,7 @@ const Transaction = () => {
                 },
                 pageSizeOptions: [5, 10, 20, 1000],
                 filtering: true,
+                maxBodyHeight: 700,
               }}
             />
           </Col>

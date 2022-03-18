@@ -25,6 +25,9 @@ const ChartCount = () => {
   const profileValue = JSON.parse(localStorage.getItem("token"));
   const getData = async () => {
     try {
+      if (!profileValue) {
+        history.replace("/login");
+      }
       setLoading(true);
       const urlPath = `/countperdate`;
       const resp = await api.get(urlPath, {
@@ -36,7 +39,7 @@ const ChartCount = () => {
       setData(resp.data.data);
       setDataByBu(resp.data.transactionbybus);
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         history.replace("/login");
       }
       setError(err.message);

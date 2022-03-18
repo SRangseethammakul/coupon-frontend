@@ -21,6 +21,7 @@
     "material-table": "^1.69.3",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
+    "react-csv": "^2.2.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^6.15.8",
     "react-icons": "^4.2.0",

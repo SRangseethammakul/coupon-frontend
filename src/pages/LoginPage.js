@@ -34,7 +34,6 @@ const LoginPage = () => {
   });
   const onSubmit = async (data) => {
     try {
-      console.log(data.username);
       const pathURL = "/login";
       const resp = await api.post(pathURL, {
         userName: data.username,
