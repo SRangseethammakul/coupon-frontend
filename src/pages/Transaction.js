@@ -207,6 +207,7 @@ const Transaction = () => {
                   csv: true,
                   pdf: false,
                 },
+                pageSizeOptions: [5, 10, 20, { value: data.length, label: 'All' }],
                 filtering: true,
               }}
             />
